@@ -1,5 +1,4 @@
-from fastapi import FastAPI
-from fastapi import UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException
 import shutil
 from pathlib import Path
 from sqlalchemy import text
@@ -64,3 +63,28 @@ async def upload_image(file: UploadFile = File(...)):
             status_code=500,
             detail=f"Something went wrong: {str(e)}"
         )
+
+
+@app.get("/photos")
+def get_photos():
+    db = SessionLocal()
+
+    try:
+        result = db.execute(
+            text("SELECT * FROM photos ORDER BY created_at DESC"))
+        photos = result.fetchall()
+
+        return {
+            "photos": [
+                {
+                    "id": row.id,
+                    "filename": row.filename,
+                    "filepath": row.filepath,
+                    "created_at": row.created_at
+                }
+                for row in photos
+            ]
+        }
+
+    finally:
+        db.close()
