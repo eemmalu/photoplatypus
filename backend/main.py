@@ -75,7 +75,6 @@ async def upload_image(file: UploadFile = File(...)):
             detail=f"Something went wrong: {str(e)}"
         )
 
-
 @app.get("/photos")
 def get_photos():
     db = SessionLocal()

@@ -14,5 +14,18 @@ export async function getPhotos(): Promise<Photo[]> {
     console.error("Error fetching photos:", error)
     return []
   }
-  // TODO: error handling 
+}
+
+export async function uploadPhoto(file: File) {
+  const formData = new FormData()
+  formData.append("file", file)
+
+  try {
+    await fetch("http://127.0.0.1:8000/upload", {
+      method: "POST",
+      body: formData,
+    })
+  } catch (error) {
+    console.error("Error uploading photo:", error)
+  }
 }
